@@ -1,0 +1,38 @@
+.page-title    { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.page-subtitle { font-size: 14px; color: #718096; margin-bottom: 20px; }
+
+.recommended-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #3d68ea;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.clusters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.selection-counter {
+  text-align: center;
+  font-size: 13px;
+  color: #718096;
+  margin-bottom: 20px;
+}
+.selection-counter strong { color: #3d68ea; }
+
+.error-msg {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.submit-btn { width: 100%; padding: 15px; font-size: 16px; }
