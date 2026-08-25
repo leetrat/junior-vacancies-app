@@ -78,7 +78,7 @@ export default function ResumeResultPage() {
           </div>
 
           <div className="card rr-section rr-gaps">
-            <h2 className="rr-section-title">📈 Что развить</h2>
+            <h2 className="rr-section-title">Что развить</h2>
             {gaps.length > 0 ? (
               <ul className="rr-list rr-gaps-list">
                 {gaps.map(g => <li key={g}><span className="gap-dot"/>Нужен: <strong>{g}</strong></li>)}
@@ -91,7 +91,7 @@ export default function ResumeResultPage() {
 
         {recommendations.length > 0 && (
           <div className="card rr-section rr-recommendations">
-            <h2 className="rr-section-title">🗺️ Рекомендации</h2>
+            <h2 className="rr-section-title">Рекомендации</h2>
             <ol className="rr-list rr-rec-list">
               {recommendations.map((r, i) => <li key={i}>{r}</li>)}
             </ol>
@@ -102,14 +102,14 @@ export default function ResumeResultPage() {
           <>
             {hr_comment && (
               <div className="card rr-llm-block rr-hr-comment">
-                <h2 className="rr-section-title">💬 Комментарий HR-консультанта</h2>
+                <h2 className="rr-section-title">Комментарий HR-консультанта</h2>
                 <p className="rr-llm-text">{hr_comment}</p>
               </div>
             )}
 
             {fun_motivation && (
               <div className="card rr-llm-block rr-motivation">
-                <h2 className="rr-section-title">🎉 Мотивация дня</h2>
+                <h2 className="rr-section-title">Мотивация дня</h2>
                 <p className="rr-llm-text rr-motivation-text">{fun_motivation}</p>
               </div>
             )}
@@ -119,7 +119,7 @@ export default function ResumeResultPage() {
         {!llm_available && (
           <div className="card rr-no-llm">
             <p>
-              ⚠️ AI-комментарий недоступен — модель не найдена или не загружена.
+              AI-комментарий недоступен — модель не найдена или не загружена.
               Положите файл <code>model.gguf</code> в папку <code>backend/data/</code>.
             </p>
           </div>

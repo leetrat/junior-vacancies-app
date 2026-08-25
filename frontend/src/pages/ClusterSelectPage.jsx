@@ -52,7 +52,7 @@ export default function ClusterSelectPage() {
         <Sidebar />
         <main className="main-content">
           <div className="card">
-            <h1 className="page-title">🗂️ Выбор кластеров для анализа</h1>
+            <h1 className="page-title">Выбор кластеров для анализа</h1>
             <p className="page-subtitle">
               Выберите один или несколько кластеров — мы покажем вакансии из каждого.
             </p>

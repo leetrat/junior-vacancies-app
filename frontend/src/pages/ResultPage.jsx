@@ -6,13 +6,6 @@ import SkillFilter  from '../components/SkillFilter';
 import { fetchResult } from '../api';
 import './ResultPage.css';
 
-const WORK_FORMAT_OPTIONS = [
-  { value: 'remote',   label: '🏠 Удалённо' },
-  { value: 'fullDay',  label: '🏢 Полный день' },
-  { value: 'flexible', label: '🔄 Гибкий' },
-  { value: 'shift',    label: '🔁 Сменный' },
-];
-
 const FLAG_LABELS = {
   green:  '✅ Без флагов',
   yellow: '⚠️ 1–2 флага',
@@ -27,20 +20,16 @@ export default function ResultPage() {
   const [loading,  setLoading]  = useState(true);
   const [error,    setError]    = useState('');
 
-  // presetSkills храним в ref — не теряются при повторном fetchResult
   const presetSkillsRef = useRef([]);
 
-  // Локальный фильтр по флагам (без запроса к бэку)
   const [filterFlag, setFilterFlag] = useState('all');
 
-  // Фильтры с запросом к бэку
   const [selectedSkills, setSkills]      = useState(new Set());
   const [workFormats,    setWorkFormats] = useState([]);
   const [salaryFrom,     setSalaryFrom]  = useState('');
   const [salaryTo,       setSalaryTo]    = useState('');
   const basePayloadRef = useRef(null);
 
-  // ── Первоначальная загрузка ───────────────────────────────────────────────
   useEffect(() => {
     const raw = sessionStorage.getItem('clusterSelection');
     if (!raw) { navigate('/'); return; }
@@ -54,7 +43,6 @@ export default function ResultPage() {
     fetchResult(selection)
       .then(res => {
         setData(res);
-        // Сохраняем presetSkills в ref — они одинаковы для всех запросов
         if (res.presetSkills?.length) {
           presetSkillsRef.current = res.presetSkills;
         }
@@ -63,7 +51,6 @@ export default function ResultPage() {
       .finally(() => setLoading(false));
   }, [navigate]);
 
-  // ── Повторный запрос при применении фильтров ─────────────────────────────
   const applyFilters = useCallback(async () => {
     if (!basePayloadRef.current) return;
     setLoading(true);
@@ -78,7 +65,6 @@ export default function ResultPage() {
       };
       const res = await fetchResult(payload);
       setData(res);
-      // presetSkills снова пришли — обновляем ref (они не изменятся, но на всякий случай)
       if (res.presetSkills?.length) presetSkillsRef.current = res.presetSkills;
     } catch {
       setError('Ошибка при применении фильтров.');
@@ -87,11 +73,6 @@ export default function ResultPage() {
     }
   }, [selectedSkills, workFormats, salaryFrom, salaryTo]);
 
-  function toggleFormat(val) {
-    setWorkFormats(prev =>
-      prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]
-    );
-  }
 
   const vacancies = data?.vacancies || [];
   const filtered  = filterFlag === 'all'
@@ -105,9 +86,8 @@ export default function ResultPage() {
       <Sidebar />
       <main className="main-content">
 
-        {/* ── Заголовок ── */}
         <div className="card result-header">
-          <h1 className="page-title">💼 Результаты подбора</h1>
+          <h1 className="page-title">Результаты подбора</h1>
           {data && (
             <p className="clusters-label">
               Кластеры: <strong>{data.selectedClusterNames?.join(', ')}</strong>
@@ -115,34 +95,15 @@ export default function ResultPage() {
           )}
         </div>
 
-        {/* ── Фильтры ── */}
         <div className="card filters-panel">
-          <h3 className="filters-title">🎛️ Фильтры</h3>
+          <h3 className="filters-title">Фильтры</h3>
 
-          {/* Навыки — presetSkills из ref, не теряются между запросами */}
           <SkillFilter
             presetSkills={presetSkillsRef.current}
             selectedSkills={selectedSkills}
             onChange={setSkills}
           />
 
-          {/* Формат работы */}
-          <div className="filter-row">
-            <span className="filter-label">Формат:</span>
-            <div className="chips-row">
-              {WORK_FORMAT_OPTIONS.map(o => (
-                <button
-                  key={o.value}
-                  className={`skill-chip ${workFormats.includes(o.value) ? 'selected' : ''}`}
-                  onClick={() => toggleFormat(o.value)}
-                >
-                  {o.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Зарплата */}
           <div className="filter-row">
             <span className="filter-label">Зарплата (₽):</span>
             <div className="salary-inputs">
@@ -173,7 +134,6 @@ export default function ResultPage() {
           </button>
         </div>
 
-        {/* ── Статистика ── */}
         {data && (
           <div className="stats-row">
             <div className="stat-card">
@@ -195,7 +155,6 @@ export default function ResultPage() {
           </div>
         )}
 
-        {/* ── Графики ── */}
         {data && (
           <div className="card plots-section">
             <h2 className="plots-title">📊 Аналитика кластера</h2>
@@ -214,29 +173,36 @@ export default function ResultPage() {
                 {data.plotsError ? '❌ Графики недоступны из-за ошибки выше' : '⏳ Нет данных для графиков'}
               </p>
             ) : (
-              <div className="plots-grid">
-                {plots.flags_distribution_plot && (
-                  <PlotCard title="Распределение red flags" src={plots.flags_distribution_plot} />
-                )}
-                {plots.top_skills_plot && (
-                  <PlotCard title="Топ навыков" src={plots.top_skills_plot} />
-                )}
-                {plots.experience_distribution_plot && (
-                  <PlotCard title="Распределение по опыту" src={plots.experience_distribution_plot} />
-                )}
-                {plots.top_red_flags_plot && (
-                  <PlotCard title="Топ red flags" src={plots.top_red_flags_plot} />
-                )}
-              </div>
+                <>
+                  <div className="plots-grid">
+                    <div className="plot-full" style={{width: "80%"}}>
+                      {plots.experience_distribution_plot && (
+                          <PlotCard title="Распределение по опыту" src={plots.experience_distribution_plot}/>
+                      )}
+                    </div>
+                    {plots.top_red_flags_plot && (
+                        <div className="plot-full" style={{width: "110%", marginLeft: "-50px"}}>
+                          <PlotCard title="Топ красных флагов" src={plots.top_red_flags_plot}/>
+                        </div>
+                    )}
+                  </div>
+                  <div className="plots-grid">
+                    {plots.flags_distribution_plot && (
+                        <PlotCard title="Распределение red flags" src={plots.flags_distribution_plot}/>
+                    )}
+                    {plots.top_skills_plot && (
+                        <PlotCard title="Облако навыков" src={plots.top_skills_plot}/>
+                    )}
+                  </div>
+                </>
             )}
           </div>
         )}
 
-        {/* ── Фильтр по уровню флагов ── */}
         <div className="card flag-filter-card">
           <div className="flag-filter-row">
             <button
-              className={`flag-filter-btn ${filterFlag === 'all' ? 'active' : ''}`}
+                className={`flag-filter-btn ${filterFlag === 'all' ? 'active' : ''}`}
               onClick={() => setFilterFlag('all')}
             >
               Все ({vacancies.length})
@@ -256,7 +222,6 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* ── Список вакансий ── */}
         {error && <p className="error-msg">{error}</p>}
 
         {loading
@@ -276,7 +241,6 @@ export default function ResultPage() {
 function PlotCard({ title, src }) {
   return (
     <div className="plot-card">
-      <p className="plot-title">{title}</p>
       <img src={`data:image/png;base64,${src}`} alt={title} className="plot-img" />
     </div>
   );

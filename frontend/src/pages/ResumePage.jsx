@@ -48,7 +48,6 @@ export default function ResumePage() {
       <Sidebar />
       <main className="main-content">
         <div className="card tool-card">
-          <div className="tool-icon-big">📄</div>
           <h1 className="page-title">Анализ резюме</h1>
           <p className="page-subtitle">
             Загрузите резюме в формате PDF или DOCX — мы оценим ваш уровень,
@@ -93,7 +92,6 @@ export default function ResumePage() {
                     </>
                   ) : (
                     <>
-                      <span className="file-icon">⬆️</span>
                       <span className="file-placeholder">
                         Нажмите или перетащите файл сюда
                       </span>

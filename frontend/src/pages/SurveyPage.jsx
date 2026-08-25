@@ -76,7 +76,7 @@ export default function SurveyPage() {
       <main className="main-content">
         <div className="main-cards-container">
           <div className="card survey-card">
-            <h1 className="survey-title">📋 Опрос</h1>
+            <h1 className="survey-title">Опрос</h1>
             <p className="survey-subtitle">
               Это нужно, чтобы подобрать вакансии, подходящие специально для вас!
             </p>

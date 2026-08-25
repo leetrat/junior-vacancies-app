@@ -36,7 +36,6 @@ export default function VacancyPage() {
       <Sidebar />
       <main className="main-content">
         <div className="card tool-card">
-          <div className="tool-icon-big">🔍</div>
           <h1 className="page-title">Анализ вакансии</h1>
           <p className="page-subtitle">
             Вставьте ссылку на вакансию с hh.ru — мы проверим её на красные флаги

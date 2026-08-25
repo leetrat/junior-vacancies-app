@@ -13,7 +13,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<SurveyPage />} />
-      <Route path="/clusters"element={<ClusterSelectPage />} />
+      <Route path="/clusters" element={<ClusterSelectPage />} />
       <Route path="/result" element={<ResultPage />} />
       <Route path="/vacancy" element={<VacancyPage />} />
       <Route path="/vacancy/result" element={<VacancyResultPage />} />
