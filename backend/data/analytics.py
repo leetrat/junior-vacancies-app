@@ -1,9 +1,3 @@
-"""
-backend/data/analytics.py
-Генерация графиков. Все внешние зависимости (squarify, wordcloud)
-импортируются лениво — если их нет, соответствующий график пропускается.
-"""
-
 import re
 import ast
 import textwrap
@@ -21,7 +15,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
-# ── Ленивые импорты опциональных зависимостей ────────────────────────────────
 def _try_import(name):
     try:
         import importlib
@@ -30,7 +23,6 @@ def _try_import(name):
         return None
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class BaseGraphGenerator(ABC):
     def __init__(self, title: str, figsize: tuple = (10, 6)):
         self.title   = title
@@ -59,7 +51,6 @@ class BaseGraphGenerator(ABC):
             return None
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class RedFlagsDistributionGraph(BaseGraphGenerator):
     """Столбчатая диаграмма: распределение количества red flags."""
 
@@ -96,21 +87,16 @@ class RedFlagsDistributionGraph(BaseGraphGenerator):
         return fig
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-class TopSkillsBarGraph(BaseGraphGenerator):
-    """
-    Топ-15 навыков — горизонтальная столбчатая диаграмма.
-    Не зависит от wordcloud, работает всегда.
-    """
+class SkillsWordCloudGraph(BaseGraphGenerator):
+    """Облако навыков кластера через WordCloud."""
 
     STOP = {
         "и", "в", "с", "по", "на", "для", "или", "из", "at", "of",
         "the", "and", "or", "to", "a", "an",
     }
 
-    def __init__(self, top_n: int = 15):
-        super().__init__(f"Топ-{top_n} навыков в кластере", figsize=(9, 6))
-        self.top_n = top_n
+    def __init__(self):
+        super().__init__("Навыки кластера", figsize=(11, 6))
 
     def _parse_skills(self, data: pd.DataFrame) -> Counter:
         counter = Counter()
@@ -142,30 +128,36 @@ class TopSkillsBarGraph(BaseGraphGenerator):
             ax.set_title(self.title, fontsize=13, fontweight="bold")
             return fig
 
-        top = counter.most_common(self.top_n)
-        skills, counts = zip(*top)
+        try:
+            from wordcloud import WordCloud
+            wc = WordCloud(
+                width=1000, height=540,
+                background_color="white",
+                colormap="Blues",
+                max_words=80,
+                prefer_horizontal=0.85,
+                min_font_size=10,
+            ).generate_from_frequencies(counter)
+            ax.imshow(wc, interpolation="bilinear")
+            ax.axis("off")
+        except ImportError:
+            top = counter.most_common(15)
+            skills, counts = zip(*top)
+            cmap = plt.cm.Blues_r
+            colors = [cmap(0.3 + 0.5 * i / len(skills)) for i in range(len(skills))]
+            ax.barh(range(len(skills)), counts, color=colors, edgecolor="white")
+            ax.set_yticks(range(len(skills)))
+            ax.set_yticklabels(skills, fontsize=10)
+            ax.invert_yaxis()
+            ax.set_xlabel("Упоминаний", fontsize=11)
+            ax.grid(axis="x", alpha=0.3, linestyle="--")
+            ax.spines[["top", "right"]].set_visible(False)
 
-        # Цвет по порядку — градиент
-        cmap   = plt.cm.Blues_r
-        colors = [cmap(0.3 + 0.5 * i / len(skills)) for i in range(len(skills))]
-
-        bars = ax.barh(range(len(skills)), counts, color=colors, edgecolor="white")
-        ax.set_yticks(range(len(skills)))
-        ax.set_yticklabels(skills, fontsize=10)
-        ax.invert_yaxis()
         ax.set_title(self.title, fontsize=13, fontweight="bold", pad=12)
-        ax.set_xlabel("Упоминаний", fontsize=11)
-        ax.grid(axis="x", alpha=0.3, linestyle="--")
-        ax.spines[["top", "right"]].set_visible(False)
-
-        for bar, val in zip(bars, counts):
-            ax.text(bar.get_width() + 0.3, bar.get_y() + bar.get_height() / 2,
-                    str(val), va="center", fontsize=9, color="#4a5568")
         fig.tight_layout()
         return fig
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class ExperienceDistributionGraph(BaseGraphGenerator):
     """Pie-chart: распределение по требуемому опыту."""
 
@@ -208,15 +200,9 @@ class ExperienceDistributionGraph(BaseGraphGenerator):
         return fig
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class RedFlagsTopBarGraph(BaseGraphGenerator):
-    """
-    Горизонтальный bar-chart топ-5 конкретных red flags.
-    Не зависит от squarify.
-    """
-
-    def __init__(self, top_n: int = 5):
-        super().__init__("Топ красных флагов", figsize=(9, 5))
+    def __init__(self, top_n: int = 8):
+        super().__init__("Топ красных флагов", figsize=(7, 5))
         self.top_n = top_n
 
     def create_plot(self, data: pd.DataFrame) -> plt.Figure:
@@ -261,16 +247,15 @@ class RedFlagsTopBarGraph(BaseGraphGenerator):
         return fig
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 class ClusterAnalyticsService:
-    """Сервис генерации графиков — без внешних зависимостей кроме matplotlib."""
+    """Сервис генерации графиков"""
 
     def __init__(self):
         self.generators: Dict[str, BaseGraphGenerator] = {
             "flags_distribution":      RedFlagsDistributionGraph(),
-            "top_skills":              TopSkillsBarGraph(top_n=15),
+            "top_skills":              SkillsWordCloudGraph(),
             "experience_distribution": ExperienceDistributionGraph(),
-            "top_red_flags":           RedFlagsTopBarGraph(top_n=5),
+            "top_red_flags":           RedFlagsTopBarGraph(top_n=8),
         }
 
     def generate_all(self, data: pd.DataFrame,
@@ -281,7 +266,7 @@ class ClusterAnalyticsService:
             if name not in self.generators:
                 continue
             img = self.generators[name].generate(data)
-            if img:                              # None — генерация не удалась
+            if img:
                 result[f"{name}_plot"] = img
             else:
                 print(f"[analytics] Skipping {name} — generate() returned None")
