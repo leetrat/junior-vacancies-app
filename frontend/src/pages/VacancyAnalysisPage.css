@@ -1,0 +1,92 @@
+.va-form-card { margin-bottom: 20px; }
+
+.va-form-group { margin-bottom: 20px; }
+.va-form-group label {
+  display: block;
+  font-size: 15px;
+  color: #2d3748;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.va-form-group input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #2d3748;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.va-form-group input[type="text"]:focus { border-color: #3d68ea; }
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #3d68ea;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-top: 8px;
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+}
+.submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.45); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Vacancy details — из VacancyResult_HTML */
+.va-details { margin-bottom: 16px; }
+.va-details h3 { font-size: 22px; margin-bottom: 12px; color: #1a202c; }
+.va-details h3 a { color: #1a202c; text-decoration: none; }
+.va-details h3 a:hover { color: #3d68ea; text-decoration: underline; }
+.va-details p { font-size: 15px; color: #4a5568; margin-bottom: 8px; }
+.va-details p strong { color: #2d3748; }
+
+.va-skills { display: inline-flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.skill-tag {
+  background: #edf2f7;
+  color: #4a5568;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+/* Red flags — из VacancyResult_HTML */
+.va-flags { margin-bottom: 16px; }
+.va-flags.danger {
+  background: #ffecec;
+  border: 2px solid #e53e3e;
+}
+.va-flags.safe {
+  background: #d4edda;
+  border: 2px solid #2ecc71;
+}
+.va-flags h3 { font-size: 18px; margin-bottom: 12px; }
+.va-flags.danger h3 { color: #e53e3e; }
+.va-flags.safe   h3 { color: #2ecc71; }
+.va-flags ul { list-style: none; padding: 0; }
+.va-flags li { font-size: 15px; color: #333; margin-bottom: 8px; padding-left: 4px; }
+
+/* Placeholder */
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  text-align: center;
+}
+.placeholder-icon {
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(5,120,101,0.1) 100%);
+  border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; margin-bottom: 20px;
+}
+.placeholder-content h3 { font-size: 20px; font-weight: 600; color: #1a202c; margin-bottom: 8px; }
+.placeholder-content p  { color: #a0aec0; font-size: 14px; max-width: 360px; line-height: 1.6; }
+
+.error-msg { color: #e53e3e; font-size: 13px; margin-bottom: 10px; }

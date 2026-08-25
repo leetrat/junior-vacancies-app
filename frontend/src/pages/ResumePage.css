@@ -1,0 +1,60 @@
+.tool-card     { max-width: 680px; }
+.tool-icon-big { font-size: 48px; margin-bottom: 12px; }
+.page-title    { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+.page-subtitle { font-size: 14px; color: #718096; margin-bottom: 28px; line-height: 1.6; }
+
+.tool-form { display: flex; flex-direction: column; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.field-label { font-size: 15px; font-weight: 600; color: #2d3748; }
+
+.field-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.file-upload-box { cursor: pointer; display: block; }
+.file-upload-box input[type="file"] { display: none; }
+
+.file-box-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  border: 2px dashed #cbd5e0;
+  border-radius: 14px;
+  background: #fafbff;
+  transition: all 0.2s;
+  text-align: center;
+  gap: 6px;
+}
+.file-upload-box:hover .file-box-inner {
+  border-color: #3d68ea;
+  background: #f0f4ff;
+}
+.file-icon        { font-size: 28px; }
+.file-name        { font-size: 15px; font-weight: 600; color: #2d3748; }
+.file-size        { font-size: 12px; color: #a0aec0; }
+.file-placeholder { font-size: 14px; color: #718096; }
+.file-hint        { font-size: 12px; color: #a0aec0; }
+
+.error-msg  { color: #e53e3e; font-size: 13px; }
+.submit-btn { padding: 14px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.tool-hint {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: #f0f4ff;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #4a5568;
+  line-height: 1.6;
+  border-left: 3px solid #3d68ea;
+}

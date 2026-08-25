@@ -1,0 +1,15 @@
+bs4
+flask
+flask-cors
+pandas
+pdfplumber
+python-docx
+sentence-transformers
+scikit-learn
+numpy
+matplotlib
+seaborn
+squarify
+wordcloud
+llama-cpp-python==0.2.77
+requests
