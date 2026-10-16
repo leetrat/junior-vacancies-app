@@ -4,3 +4,5 @@ backend/routes/__pycache__
 /.idea
 /vite-project
 /react
+
+.env
